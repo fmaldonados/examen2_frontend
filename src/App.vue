@@ -1,15 +1,11 @@
 <template>
   <div id="app">
-    <div v-show="scope=='regular'">
-    <ul id="dropdown1" class="dropdown-content">
-        <li> <a>Pets</a> </li>
-      <li><a>Friends</a></li>
-    </ul>
-    <nav class='blue'>
+    <div v-show="scope=='admin'">
+    <nav class='black'>
       <div class="row">
-        <div class="col s1 m1 l1">
+        <div class="col s3 m3 l3">
           <div class="nav-wrapper">
-            <a class="brand-logo">Prueba</a>
+            <a class="brand-logo">Kim jong boom</a>
           </div>
         </div>
         <div class="col s3 m3 l3">
@@ -21,12 +17,8 @@
             <li><a>JavaScript</a></li>
           </ul>
         </div>
-        <div class="input-field col s5 offset-s3">
-          <div class="col s2 m2 l2">
-            <ul id="nav-mobile" >
-              <li><a class="dropdown-button"  data-activates="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
-            </ul>
-          </div>
+        <div class="input-field col s5 offset-s1">
+          
           <div class="col s1 m1 l1"></div>
           <div class="col s1 m1 l1 ">
             <i class="material-icons">search</i>
@@ -45,20 +37,20 @@
             <form class="card col s3 offset-s4">
               <div class="row">
                 <div class="input-field col s12">
-                  <input id="first_name" type="text" class="validate">
+                  <input v-model="username" id="first_name" type="text" class="validate">
                   <label for="first_name">Username</label>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <input id="email" type="password" class="validate">
+                  <input v-model="password" id="email" type="password" class="validate">
                   <label for="email">Password</label>
                 </div>
               </div>
               <div class="row">
                 <div class="col s12 ">
-                  <a v-on:click="signIn=true" class="waves-effect waves-grey btn-flat">sign up</a>
-                  <a class="waves-effect waves-light btn teal">login in</a>
+                  <a class="waves-effect waves-grey btn-flat">sign up</a>
+                  <a v-on:click="login" class="waves-effect waves-light btn teal">login in</a>
                 </div>
               </div>
             </form>
@@ -104,15 +96,32 @@
 </template>
 
 <script>
-
+import authService from '../services/auth'
 export default {
   name: 'app',
   data () {
     return{
-      scope:"regular",
-      signIn:false
+      scope:this.sessionStorage,
+      signIn:false,
+      username:"",
+      password:""
     }
   },
+  methods:{
+            login(){
+	            var body={username:this.username,password:this.password};
+                console.log(body);
+                authService.login(body).then(response=>{
+                    if(response.body !='usuario no existe'){
+                        sessionStorage.username= response.body.nombreUsuario;
+                        sessionStorage.scope=response.body.scope[0];
+                        this.scope=response.body.scope[0];
+                    }
+                });
+                this.username='';
+                this.password='';
+            }
+  }
 }
 </script>
 <style>
