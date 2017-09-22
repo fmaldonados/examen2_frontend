@@ -101,7 +101,7 @@ export default {
   name: 'app',
   data () {
     return{
-      scope:this.sessionStorage,
+      scope:sessionStorage.scope,
       signIn:false,
       username:"",
       password:""
